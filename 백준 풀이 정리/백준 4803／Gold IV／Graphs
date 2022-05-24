@@ -19,10 +19,10 @@ bool dfs(int x, int before)
     int y = v[x][i];
     if(!visit[y])
     {
-      if(!dfs(y, x)) return false;
-      else
+      if(!dfs(y, x)) return false;            // Cycle을 확인하기 위하여 dfs(y, x)의 결과에 따라서 다시 return값을 받아야 함.
+      else                                       return dfs(y, x)로 작성하면 제대로 cycle을 검사하지 못함.
       {
-        if(y==before) continue;
+        if(y==before) continue;               // Undirected Graph이기 때문에 바로 이전으로 가는 edge의 경우 cycle로 처리하지 않도록 함.
         else return false;
       }
     }
