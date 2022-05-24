@@ -68,8 +68,8 @@ string tosame(string x, string y)
 	int tmp = 0;
 	while (x.size() != y.size())
 	{
-		if (x.size() < y.size())                      /* 사이즈가 다르면 뒷부분에 마지막 숫자를 계속 더해서 같은 크기로 만들어주고 비교하려 시도.
-                                                     ex) compare (3, 34) -> (33, 34)로 비교 */
+		if (x.size() < y.size())                 /* 사이즈가 다르면 뒷부분에 마지막 숫자를 계속 더해서 같은 크기로 만들어주고 비교하려 시도.
+							    ex) compare (3, 34) -> (33, 34)로 비교 */
 		{
 			tmp = 1;
 			x += x.back();
