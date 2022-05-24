@@ -1,0 +1,39 @@
+// https://www.acmicpc.net/problem/12851
+#include <iostream>
+#include <queue>
+
+using namespace std;
+int n, m;
+int cnt = 0;
+int t = -1;
+bool visit[100001] = {false};
+
+void bfs(int x)
+{
+  queue <pair <int, int>> q;
+  visit[x] = true;
+  q.push({x, 0});
+  while (!q.empty())
+  {
+    int tmpx = q.front().first;
+    int tmpt = q.front().second;
+    q.pop();
+    visit[tmpx] = true;                               // 보통 bfs와 다르게 pop한 후 visit 처리를 해줌. (동시에 도착하는 경우를 체크하기 위함)
+    
+    if (cnt != 0 && tmpx == m && tmpt == t) cnt++;    // 이미 visit하여 cnt가 0이 아니고 t가 tmpt인 경우에 cnt 증가 (순서조건 준수)
+    if (cnt == 0 && tmpx == m && tmpt == -1)          // 처음 visit하여 cnt가 0이고 t가 -1인 경우 t를 tmpt로 설정 및 cnt 증가
+    {
+      cnt++;
+      t = tmpt;
+    }
+}
+
+int main()
+{
+  ios_base::sync_with_stdio(false);
+  cin.tie(0);
+  
+  cin >> n >> m;
+  bfs(n);
+  cout << t << "\n" << cnt;
+}
