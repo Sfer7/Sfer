@@ -1,0 +1,161 @@
+// https://www.acmicpc.net/problem/16496
+
+// 1. 정답 코드
+#include <iostream>	
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+bool compare(const string& p1, const string& p2)
+{
+	string a = p1 + p2;                                     // 두 수를 서로 앞에서 붙여보고 뒤에서 붙여봤을 때 더 크면 true, 아니면 false로 정렬해준다.
+	string b = p2 + p1;
+	if (a > b)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+	
+	int n;
+	bool chk = true;
+	string x;
+	cin >> n;
+	vector <string> v;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> x;
+		if (stoi(x) != 0)
+		{
+			chk = false;
+		}
+		v.push_back(x);
+	}
+	sort(v.begin(), v.end(), compare);
+	if (chk)
+	{
+		cout << 0;
+	}
+	else
+	{
+		for (int i = 0; i < n; i++)
+		{
+			cout << v[i];
+		}
+	}
+}
+
+// 2. 오답 코드 (93% Fail Code)
+#include <iostream>	
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+string tosame(string x, string y)
+{
+	int tmp = 0;
+	while (x.size() != y.size())
+	{
+		if (x.size() < y.size())                      /* 사이즈가 다르면 뒷부분에 마지막 숫자를 계속 더해서 같은 크기로 만들어주고 비교하려 시도.
+                                                     ex) compare (3, 34) -> (33, 34)로 비교 */
+		{
+			tmp = 1;
+			x += x.back();
+		}
+		else if (x.size() > y.size())
+		{
+			tmp = 2;
+			y += y.back();
+		}
+	}
+	if (tmp == 1)                                   // x가 더 작은 숫자였다면 x에 tosame을 적용한 x를 return
+	{
+		return x;
+	}
+	else if (tmp == 2)                              // y가 더 작은 숫자였다면 y에 tosame을 적용한 y를 return
+	{
+		return y;
+	}
+}
+
+bool compare(const string& p1, const string& p2)
+{
+	if (p1.front() > p2.front())
+	{
+		return true;
+	}
+	else if (p1.front() == p2.front())              // 사이즈가 다른 경우 tosame을 이용하여 비교를 수행 후 sorting
+	{
+		if (p1.size() < p2.size())
+		{
+			return tosame(p1, p2) >= p2;
+		}
+		else if(p1.size() > p2.size())
+		{
+			return p1 >= tosame(p1, p2);
+		}
+		else
+		{
+			return p1 > p2;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+	
+	int n;
+	bool chk = true;
+	string x;
+	cin >> n;
+	vector <string> v;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> x;
+		if (stoi(x) != 0)
+		{
+			chk = false;
+		}
+		v.push_back(x);
+	}
+	sort(v.begin(), v.end(), compare);
+	if (chk)
+	{
+		cout << 0;
+	}
+	else
+	{
+		for (int i = 0; i < n; i++)
+		{
+			cout << v[i];
+		}
+	}
+}
+
+/*
+위의 오답 코드는
+Input
+3
+1004 100 10
+Output : 100410010
+Correct : 101004100
+으로 오답 처리된다. 위와 같은 경우의 수를 처리할 경우 tosame 함수는 적합하지 못하였다.
+*/
