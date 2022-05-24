@@ -1,0 +1,75 @@
+//https://www.acmicpc.net/problem/4803
+
+// 1. DFS Cycle 확인 풀이
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int n, m;
+int ans;
+vector <vector <int>> v;
+bool visit[501] = {false}
+
+bool dfs(int x, int before)
+{
+  visit[x] = true;
+  for(int i=0; i<v[x].size(); i++)
+  {
+    int y = v[x][i];
+    if(!visit[y])
+    {
+      if(!dfs(y, x)) return false;
+      else
+      {
+        if(y==before) continue;
+        else return false;
+      }
+    }
+  }
+  return true;
+}
+
+void init(int num)
+{
+  ans = 0;
+  fill_n(visit, 501, false);
+  v.resize(num + 1);
+}
+
+int main()
+{
+  ios_base::sync_with_stdio(false);
+  cin.tie(0);
+  int x, y;
+  int no = 0;
+  
+  while(1)
+  {
+    no++;
+    cin >> n >> m;
+    if(n==0 && m==0) break;
+    init(n);
+    for(int i=0; i<m; i++)
+    {
+      cin >> x >> y;
+      v[x].push_back(y);
+      v[y].push_back(x);
+    }
+    for(int i=1; i<=n; i++)
+    {
+      if(!visit[i])
+        if(dfs(i, i)) ans++;
+    }
+    if(ans == 0)
+      cout << "Case " << no << ": No trees.\n";
+    else if(ans == 1)
+      cout << "Case " << no << ": There is one tree.\n";
+    else
+      cout << "Case " << no << ": A forest of " << ans << " trees.\n";
+    
+    v.resize(0);
+  }
+  
+  // 2. Union-Find를 이용한 풀이
+  
