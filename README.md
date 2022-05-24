@@ -2,4 +2,4 @@
 <b>백준</b> 문제풀이 메모
 <br>
 [![Solved.ac
-프로필](http://mazassumnida.wtf/api/generate_badge?boj=ffdfig)](https://solved.ac/ffdfig)
+프로필](http://mazassumnida.wtf/api/v2/generate_badge?boj={ffdfig})](https://solved.ac/{ffdfig})
