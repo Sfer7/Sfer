@@ -1,0 +1,67 @@
+// https://www.acmicpc.net/problem/16916
+
+// KMP 알고리즘 이용
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool chk = false;
+vector <int> fail(string pt)
+{
+    vector <int> table(pt.size(), 0);
+    int j = 0;
+    for(int i=1; i<pt.size(); i++)
+    {
+        while(j>0 && pt[i] != pt[j])
+        {
+            j = table[j - 1];
+        }
+        if(pt[i] == pt[j])
+        {
+            table[i] = ++j;
+        }
+    }
+    return table;
+}
+
+void KMP(string txt, string pt)
+{
+    vector <int> table = fail(pt);
+    int txtsize = txt.size();
+    int ptsize = pt.size();
+    int j = 0;
+    for(int i=0; i<txtsize; i++)
+    {
+        while(j>0 && txt[i] != pt[j])
+        {
+            j = table[j - 1];
+        }
+        if(txt[i] == pt[j])
+        {
+            if(j == ptsize - 1)
+            {
+                j = table[j];
+                chk = true;
+                return;
+            }
+            else
+            {
+                j++;
+            }
+        }
+    }
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    
+    string x, y;
+    cin >> x >> y;
+    if(chk)
+        cout << 1;
+    else
+        cout << 0;
+}
