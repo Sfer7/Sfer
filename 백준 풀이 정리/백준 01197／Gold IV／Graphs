@@ -21,7 +21,7 @@ void prim(int x)
 		ll dist = pq.top().first;
 		int node = pq.top().second;
 		pq.pop();
-		if (visit[node]) continue;
+		if (visit[node]) continue; 				// 다익스트라와 비슷하지만, 거리계산을 할 필요 없이 visit만으로 조건을 알아낼 수 있음.
 		visit[node] = true;
 		ans += dist;
 		for (int i = 0; i < v[node].size(); i++)
@@ -54,4 +54,71 @@ int main()
 	cout << ans;
 }
 
+
+
 // 2. Kruskal Algorithm을 이용한 풀이
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+vector < pair <int, pair <int, int>>> v; 
+int par[10001];
+int ans = 0;
+
+int find(int x)
+{
+	if (par[x] == x)
+	{
+		return x;
+	}
+	else
+	{
+		return par[x] = find(par[x]);
+	}
+}
+
+void uni(int x, int y)
+{
+	x = find(x);
+	y = find(y);
+	par[x] = par[y] = min(x, y);
+}
+
+bool samePar(int x, int y)			// 크루스칼 알고리즘은 부모가 같지 않은 노드 중 가중치가 최소인 것부터 더하므로, 부모가 같은지 확인하는 함수가 필요.
+{
+	x = find(x);
+	y = find(y);
+	if (x == y) return true;
+	else return false;
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+	
+	int V, E;
+	int x, y, z;
+	cin >> V >> E;
+	for (int i = 1; i <= V; i++)
+	{
+		par[i] = i;
+	}
+	for (int i = 0; i < E; i++)
+	{
+		cin >> x >> y >> z;
+		v.push_back({ z, {x, y} });
+	}
+	sort(v.begin(), v.end());		// 가중치가 낮은 순으로 정렬.
+	for (int i = 0; i < v.size(); i++)
+	{
+		if (!samePar(v[i].second.first, v[i].second.second))		// 부모가 다르다면 Union을 해줌.
+		{
+			uni(v[i].second.first, v[i].second.second);
+			ans += v[i].first;
+		}
+	}
+	cout << ans;
+}
