@@ -1,0 +1,87 @@
+// https://www.acmicpc.net/problem/2887
+
+// Kruskal Algorithm을 이용한 풀이
+#include <iostream>	
+#include <vector>
+#include <algorithm>
+#include <tuple>
+
+using namespace std;
+
+int n;
+int ans = 0;
+
+vector <pair <int, int>> cx;                                      // 행성의 x좌표를 저장하는 벡터
+vector <pair <int, int>> cy;                                      // 행성의 y좌표를 저장하는 벡터
+vector <pair <int, int>> cz;                                      // 행성의 z좌표를 저장하는 벡터
+vector <tuple <int, int, int>> edge;                              // 간선 정보를 저장하는 벡터
+int par[100001] = { 0 };                                          // Union-Find를 위한 parent 배열 지정
+
+int find(int x)                                                   // find 함수 정의
+{
+	if (x == par[x])
+	{
+		return x;
+	}
+	else
+	{
+		return par[x] = find(par[x]);
+	}
+}
+
+bool uni(int x, int y)                                            // union 함수 정의
+{
+	x = find(x);
+	y = find(y);
+
+	if (x == y)                                                     // 두 좌표의 parent값이 같을 때 union을 진행하면 cycle이 생기므로 false를 return
+	{
+		return false;
+	}
+	par[x] = par[y] = min(x, y);
+	return true;
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+
+	int x, y, z;
+
+	cin >> n;
+	for (int i = 1; i <= n; i++)                                    // parent 배열 초기화
+	{
+		par[i] = i;
+	}
+	for (int i = 0; i < n; i++)
+	{
+		cin >> x >> y >> z;                                           // 문제에서 가중치는 행성 간 x, y, z좌표의 차이의 최솟값이므로, 따로 저장해도 문제가 되지 않음
+		cx.push_back({x, i});
+		cy.push_back({y, i});
+		cz.push_back({z, i});
+	}
+	sort(cx.begin(), cx.end());                                     // x좌표 배열 정렬
+	sort(cy.begin(), cy.end());                                     // y좌표 배열 정렬
+	sort(cz.begin(), cz.end());                                     // z좌표 배열 정렬
+	for (int i = 0; i < n - 1; i++)                                 /* 정렬된 x, y, z를 통해 최소값이 될 수 있는 간선 위주로 edge 배열 구성
+                                                                     각 원소는 순서대로 '비용', '시작 정점', '끝 정점'이다. */
+	{
+		edge.push_back({ cx[i + 1].first - cx[i].first, cx[i].second, cx[i + 1].second });
+		edge.push_back({ cy[i + 1].first - cy[i].first, cy[i].second, cy[i + 1].second });
+		edge.push_back({ cz[i + 1].first - cz[i].first, cz[i].second, cz[i + 1].second });
+	}
+	sort(edge.begin(), edge.end());                                 // edge 배열 정렬
+	for (int i = 0; i < edge.size(); i++)
+	{
+		int cost = get<0>(edge[i]);
+		int node1 = get<1>(edge[i]);
+		int node2 = get<2>(edge[i]);
+
+		if (uni(node1, node2))                                        // node1과 node2가 union 가능하면 union을 해주면서 cost값을 더해준다.
+		{
+			ans += cost;
+		}
+	}
+	cout << ans;
+}
