@@ -6,7 +6,7 @@
 
 using namespace std;
 
-vector <int> fail(string pt)                          // failure 함수 정의
+vector <int> fail(string pt)                         		 // failure 함수 정의
 {
 	vector <int> table(pt.size(), 0);
 	int j = 0;
@@ -33,21 +33,21 @@ int main()
 	cin >> x;
 	vector <int> table = fail(x);
 	int len = x.length();              
-	int maxi = table[len - 1];                          /* 접두사, 접미사, 그 외의 위치에서 나오려면 마지막까지 일치하는 경우는 완전 일치하는 경우이므로
-                                                         maxi를 완전 일치하는 경우(패턴의 마지막 부분까지 일치하는 경우)로 정의해준다. */
-	while (maxi > 0)                                    // maxi가 0이 될 때까지 반복
+	int maxi = table[len - 1];				/* 접두사, 접미사, 그 외의 위치에서 나오려면 마지막까지 일치하는 경우는 완전 일치하는 경우이므로
+								   maxi를 완전 일치하는 경우(패턴의 마지막 부분까지 일치하는 경우)로 정의해준다. */
+	while (maxi > 0)                                        // maxi가 0이 될 때까지 반복
 	{
-		for (int i = 1; i < len - 1; i++)                 /* prefix와 suffix는 이미 동일한 것을 알고 있으므로 prefix와 suffix 탐색은 하지 못하도록 범위를 정의.
-                                                         (0과 len-1 부분을 제외하고 탐색) */
+		for (int i = 1; i < len - 1; i++)               /* prefix와 suffix는 이미 동일한 것을 알고 있으므로 prefix와 suffix 탐색은 하지 못하도록 범위를 정의.
+                                                  	           (0과 len-1 부분을 제외하고 탐색) */
 		{
-			if (table[i] == maxi)                           // 패턴 table에서 (prefix의 길이) = (suffix의 길이) = maxi가 나타나면 maxi 길이의 prefix를 출력 후 종료
+			if (table[i] == maxi)                   // 패턴 table에서 (prefix의 길이) = (suffix의 길이) = maxi가 나타나면 maxi 길이의 prefix를 출력 후 종료
 			{
 				cout << x.substr(0, maxi);
 				return 0;
 			}
 		}
-		maxi = table[maxi - 1];                           /* 찾지 못하는 경우이면서, 길이가 줄어도 접미사가 되는 경우를 탐새하도록 반환.
-                                                         ex) aabbaa의 maximum str은 "aa". 이때 maxi = table[maxi - 1]을 해줌으로써 maximum str은 "a"가 된다. */  
+		maxi = table[maxi - 1];                         /* 찾지 못하는 경우이면서, 길이가 줄어도 접미사가 되는 경우를 탐새하도록 반환.
+                                                        	   ex) aabbaa의 maximum str은 "aa". 이때 maxi = table[maxi - 1]을 해줌으로써 maximum str은 "a"가 된다. */  
 	}
-	cout << -1;                                         // 찾을 수 없는 경우 -1을 출력
+	cout << -1;                                             // 찾을 수 없는 경우 -1을 출력
 }
