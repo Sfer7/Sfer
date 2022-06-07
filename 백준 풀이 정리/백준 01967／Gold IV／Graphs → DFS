@@ -1,0 +1,52 @@
+// https://www.acmicpc.net/problem/1967
+
+// DFS를 활용한 풀이
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector <vector <pair <int, int>>> v;
+bool visit[10001] = { false };
+
+int endv;
+int maxi = 0;
+void dfs(int x, int cost)
+{
+	visit[x] = true;
+	if (cost > maxi)
+	{
+		maxi = cost;
+		endv = x;
+	}
+	for (int i = 0; i < v[x].size(); i++)
+	{
+		int y = v[x][i].first;
+		if (!visit[y])
+		{
+			dfs(y, cost + v[x][i].second);
+		}
+	}
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+
+	int n;
+	int x, y, z;
+	cin >> n;
+	v.resize(n + 1);
+	for (int i = 0; i < n - 1; i++)
+	{
+		cin >> x >> y >> z;
+		v[x].push_back({ y, z });
+		v[y].push_back({ x, z });
+	}
+	dfs(1, 0);
+	maxi = 0;
+	fill_n(visit, 10001, false);
+	dfs(endv, 0);
+	cout << maxi;
+}
