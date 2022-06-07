@@ -9,12 +9,12 @@ using namespace std;
 vector <vector <pair <int, int>>> v;
 bool visit[10001] = { false };
 
-int endv;
+int endv;								// 가장 끝에 있는 vertex
 int maxi = 0;
 void dfs(int x, int cost)
 {
 	visit[x] = true;
-	if (cost > maxi)
+	if (cost > maxi)						// 가장 큰 cost와, 그에 맞는 vertex를 구하는 조건식
 	{
 		maxi = cost;
 		endv = x;
@@ -24,7 +24,7 @@ void dfs(int x, int cost)
 		int y = v[x][i].first;
 		if (!visit[y])
 		{
-			dfs(y, cost + v[x][i].second);
+			dfs(y, cost + v[x][i].second);			// cost를 계속 더해서 갱신해준다
 		}
 	}
 }
@@ -44,9 +44,9 @@ int main()
 		v[x].push_back({ y, z });
 		v[y].push_back({ x, z });
 	}
-	dfs(1, 0);
+	dfs(1, 0);							// 임의의 정점에서 dfs를 수행해도 지름이 되기 위한 vertex 중의 하나가 최고 cost를 가지게 됨
 	maxi = 0;
 	fill_n(visit, 10001, false);
-	dfs(endv, 0);
+	dfs(endv, 0);							// 앞서 구한 지름의 끝 정점을 대입하여 지름의 길이를 
 	cout << maxi;
 }
