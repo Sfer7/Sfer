@@ -1,0 +1,167 @@
+// Linked Structure를 이용한 Binary Search Tree와 Subtree의 Size 구하기
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct node
+{
+	int elem;
+	int subsize;
+	node* left;
+	node* right;
+	node* parent;
+};
+
+class bst
+{
+public:
+	bst()
+	{
+		n = 0;
+		root = NULL;
+	}
+	bool empty()
+	{
+		return n == 0;
+	}
+	void insert(int x)
+	{
+		if (empty())
+		{
+			root = new node;
+			root->elem = x;
+			root->left = root->right = root->parent = NULL;
+			n++;
+		}
+		else
+		{
+			node* newNode = new node;
+			newNode->elem = x;
+			newNode->left = newNode->right = NULL;
+			node* curNode = root;
+			while (1)
+			{
+				if (curNode->elem > x)
+				{
+					if (curNode->left == NULL)
+					{
+						curNode->left = newNode;
+						newNode->parent = curNode;
+						break;
+					}
+					else
+					{
+						curNode = curNode->left;
+					}
+				}
+				else
+				{
+					if (curNode->right == NULL)
+					{
+						curNode->right = newNode;
+						newNode->parent = curNode;
+						break;
+					}
+					else
+					{
+						curNode = curNode->right;
+					}
+				}
+			}
+			n++;
+		}
+	}
+	int subdegree(int x)
+	{
+		node* target = find(x);
+		if (target->left == NULL)
+		{
+			return 0;
+		}
+		else
+		{
+			return target->left->subsize;
+		}
+	}
+	void postorder(node* start)
+	{
+		node* curNode = start;
+		if (curNode->left != NULL)
+		{
+			postorder(curNode->left);
+		}
+		if (curNode->right != NULL)
+		{
+			postorder(curNode->right);
+		}
+		if (curNode->left == NULL && curNode->right == NULL)
+		{
+			curNode->subsize = 1;
+		}
+		else if (curNode->left == NULL && curNode->right != NULL)
+		{
+			curNode->subsize = curNode->right->subsize + 1;
+		}
+		else if (curNode->left != NULL && curNode->right == NULL)
+		{
+			curNode->subsize = curNode->left->subsize + 1;
+		}
+		else
+		{
+			curNode->subsize = curNode->left->subsize + curNode->right->subsize + 1;
+		}
+	}
+	node* isRoot()
+	{
+		return root;
+	}
+
+private:
+	int n;
+	node* root;
+	node* find(int x)
+	{
+		node* curNode = root;
+		while (1)
+		{
+			if (curNode->elem == x)
+			{
+				return curNode;
+			}
+			else
+			{
+				if (curNode->elem > x)
+				{
+					curNode = curNode->left;
+				}
+				else
+				{
+					curNode = curNode->right;
+				}
+			}
+		}
+	}
+};
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+
+	bst b;
+	int n, m;
+	int x;
+	cin >> n >> m;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> x;
+		b.insert(x);
+	}
+	b.postorder(b.isRoot());
+	for (int i = 0; i < m; i++)
+	{
+		cin >> x;
+		cout << b.subdegree(x) << "\n";
+	}
+}
