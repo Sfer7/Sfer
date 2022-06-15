@@ -1,0 +1,113 @@
+// 그래프의 연결 상태를 벡터인 edgeList로 구현
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector <pair <int, int>> vertex;
+vector <pair <int, int>> edge;
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+
+	int t, x, y, V;
+	string task;
+	cin >> t >> V;
+	for (int i = 0; i < V; i++)
+	{
+		cin >> x;
+		vertex.push_back({x, i});
+	}
+	while (t--)
+	{
+		bool chk = false;
+		cin >> task;
+		if (task == "insertEdge")
+		{
+			cin >> x >> y;
+			for (int i = 0; i < edge.size(); i++)
+			{
+				if (edge[i].first == x && edge[i].second == y)
+				{
+					cout << "Exist\n";
+					chk = true;
+					break;
+				}
+				if (edge[i].first == y && edge[i].second == x)
+				{
+					cout << "Exist\n";
+					chk = true;
+					break;
+				}
+			}
+			if (chk) continue;
+			edge.push_back({ x, y });
+			edge.push_back({ y, x });
+		}
+		else if (task == "eraseEdge")
+		{
+			int chksum = 0;
+			int idx1, idx2;
+			cin >> x >> y;
+			for (int i = 0; i < edge.size(); i++)
+			{
+				if (chksum == 2)
+				{
+					break;
+				}
+				if (edge[i].first == x && edge[i].second == y)
+				{
+					idx1 = i;
+					chk = true;
+					chksum++;
+				}
+				if (edge[i].first == y && edge[i].second == x)
+				{
+					idx2 = i;
+					chk = true;
+					chksum++;
+				}
+			}
+			if (!chk)
+			{
+				cout << "None\n";
+			}
+			else
+			{
+				if (idx1 > idx2)
+				{
+					edge.erase(edge.begin() + idx1);
+					edge.erase(edge.begin() + idx2);
+				}
+				else
+				{
+					edge.erase(edge.begin() + idx2);
+					edge.erase(edge.begin() + idx1);
+				}
+			}
+		}
+		else if (task == "SumAdjacentNode")
+		{
+			cin >> x;
+			int sum = 0;
+			for (int i = 0; i < edge.size(); i++)
+			{
+				if (edge[i].first == x)
+				{
+					sum += edge[i].second;
+					chk = true;
+				}
+			}
+			if (chk)
+			{
+				cout << sum << "\n";
+			}
+			else
+			{
+				cout << "None\n";
+			}
+		}
+	}
+}
