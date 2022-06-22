@@ -1,0 +1,69 @@
+// https://www.acmicpc.net/problem/21758
+
+// Segment Tree를 이용한 누적합과 Greedy하게 Case Work 나누기
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+vector <int> arr;
+vector <int> sgt;
+
+int make_sgt(int node, int start, int end)
+{
+	if (start == end) return sgt[node] = arr[start];
+
+	int mid = (start + end) / 2;
+	int left_res = make_sgt(node * 2, start, mid);
+	int right_res = make_sgt(node * 2 + 1, mid + 1, end);
+
+	return sgt[node] = left_res + right_res;
+}
+
+int sum(int node, int start, int end, int left, int right)
+{
+	if (left > end || right < start) return 0;
+	if (left <= start && end <= right) return sgt[node];
+
+	int mid = (start + end) / 2;
+	int left_res = sum(node * 2, start, mid, left, right);
+	int right_res = sum(node * 2 + 1, mid + 1, end, left, right);
+
+	return left_res + right_res;
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+
+	int n;
+	int ans = 0;
+	cin >> n;
+	arr.resize(n + 1);
+	for (int i = 1; i <= n; i++)
+	{
+		cin >> arr[i];
+	}
+	int height = (int)ceil(log2(n));
+	int tsize = 1 << (height + 1);
+	sgt.resize(tsize);
+	make_sgt(1, 1, n);
+	for (int i = 2; i < n; i++)														// 벌 - 벌 - 꿀통의 경우. 양 끝에 벌과 꿀통을 고정하고, 중간의 벌만 움직임
+	{
+		int tmp = sum(1, 1, n, i + 1, n) + (sum(1, 1, n, 2, n) - arr[i]);
+		ans = max(ans, tmp);
+	}
+	for (int i = 2; i < n; i++)														// 꿀통 - 벌 - 벌의 경우. 양 끝에 꿀통과 벌을 고정하고, 중간의 벌만 움직임
+	{
+		int tmp = sum(1, 1, n, 1, i - 1) + (sum(1, 1, n, 1, n - 1) - arr[i]);
+		ans = max(ans, tmp);
+	}
+	for (int i = 2; i < n; i++)														// 벌 - 꿀통 - 벌의 경우. 양 끝에 벌들을 고정하고, 중간의 꿀통만 움직임.
+	{
+		int tmp = sum(1, 1, n, 2, i) + sum(1, 1, n, i, n - 1);
+		ans = max(ans, tmp);
+	}
+	cout << ans;
+}
