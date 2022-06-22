@@ -50,17 +50,17 @@ int main()
 	int tsize = 1 << (height + 1);
 	sgt.resize(tsize);
 	make_sgt(1, 1, n);
-	for (int i = 2; i < n; i++)														// 벌 - 벌 - 꿀통의 경우. 양 끝에 벌과 꿀통을 고정하고, 중간의 벌만 움직임
+	for (int i = 2; i < n; i++)						// 벌 - 벌 - 꿀통의 경우. 양 끝에 벌과 꿀통을 고정하고, 중간의 벌만 움직임
 	{
 		int tmp = sum(1, 1, n, i + 1, n) + (sum(1, 1, n, 2, n) - arr[i]);
 		ans = max(ans, tmp);
 	}
-	for (int i = 2; i < n; i++)														// 꿀통 - 벌 - 벌의 경우. 양 끝에 꿀통과 벌을 고정하고, 중간의 벌만 움직임
+	for (int i = 2; i < n; i++)						// 꿀통 - 벌 - 벌의 경우. 양 끝에 꿀통과 벌을 고정하고, 중간의 벌만 움직임
 	{
 		int tmp = sum(1, 1, n, 1, i - 1) + (sum(1, 1, n, 1, n - 1) - arr[i]);
 		ans = max(ans, tmp);
 	}
-	for (int i = 2; i < n; i++)														// 벌 - 꿀통 - 벌의 경우. 양 끝에 벌들을 고정하고, 중간의 꿀통만 움직임.
+	for (int i = 2; i < n; i++)						// 벌 - 꿀통 - 벌의 경우. 양 끝에 벌들을 고정하고, 중간의 꿀통만 움직임.
 	{
 		int tmp = sum(1, 1, n, 2, i) + sum(1, 1, n, i, n - 1);
 		ans = max(ans, tmp);
