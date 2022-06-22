@@ -1,7 +1,7 @@
 // https://www.acmicpc.net/problem/1783
 
 // Greedy Algorithm을 이용한 풀이
-// 조건의 N과 M의 크기가 2,000,000,000인 것으로 보아 Brute-Force Algorithm은 사용할 수 없다
+// 조건의 N과 M의 크기가 2,000,000,000인 것으로 보아 Brute-Force Algorithm은 사용할 수 없다.
 #include <iostream>
 
 using namespace std;
