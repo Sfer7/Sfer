@@ -9,24 +9,24 @@ using namespace std;
 #define ll long long
 #define MOD 1000000007
 
-vector <ll> arr;																	// 입력 배열
-vector <ll> sgt;																	// 세그먼트 트리 배열 (완전 이진 트리와 유사한 구조를 지니므로)
+vector <ll> arr;									// 입력 배열
+vector <ll> sgt;									// 세그먼트 트리 배열 (완전 이진 트리와 유사한 구조를 지니므로)
 
-ll make_sgt(int node, int start, int end)											// 세그먼트 트리 생성 함수
+ll make_sgt(int node, int start, int end)						// 세그먼트 트리 생성 함수
 {
-	if (start == end) return sgt[node] = arr[start];								// 한 점으로 귀결될 때, 즉, leaf node의 경우 arr의 값을 그대로 이용
+	if (start == end) return sgt[node] = arr[start];				// 한 점으로 귀결될 때, 즉, leaf node의 경우 arr의 값을 그대로 이용
 
 	int mid = (start + end) / 2;
-	ll left_res = make_sgt(node * 2, start, mid);									// left child 값
-	ll right_res = make_sgt(node * 2 + 1, mid + 1, end);							// right child 값
-	sgt[node] = (left_res * right_res) % MOD;										// 노드 값은 left child * right child를 MOD처리 한 값
+	ll left_res = make_sgt(node * 2, start, mid);					// left child 값
+	ll right_res = make_sgt(node * 2 + 1, mid + 1, end);				// right child 값
+	sgt[node] = (left_res * right_res) % MOD;					// 노드 값은 left child * right child를 MOD처리 한 값
 	return sgt[node];
 }
 
-ll mul_sgt(int node, int start, int end, int left, int right)						// left부터 right까지의 노드의 곱을 return하는 함수
+ll mul_sgt(int node, int start, int end, int left, int right)				// left부터 right까지의 노드의 곱을 return하는 함수
 {
-	if (left > end || right < start) return 1;										// 범위 내에 없는 경우 1을 return (곱의 항등원을 return)
-	if (left <= start && end <= right) return sgt[node];							/* left와 right 안에 start와 end가 모두 있는 경우
+	if (left > end || right < start) return 1;					// 범위 내에 없는 경우 1을 return (곱의 항등원을 return)
+	if (left <= start && end <= right) return sgt[node];				// left와 right 안에 start와 end가 모두 있는 경우
 																					   → 현재 가리키는 노드가 구하려는 노드의 곱들을 나타내는 노드인 경우 노드값을 return */
 
 	int mid = (start + end) / 2;
@@ -36,10 +36,10 @@ ll mul_sgt(int node, int start, int end, int left, int right)						// left부터
 	return (left_res * right_res) % MOD;
 }
 
-ll update_sgt(int node, int start, int end, int idx, ll val)						// 값을 update한 경우 (make_sgt와 거의 유사한 구조 가짐)
+ll update_sgt(int node, int start, int end, int idx, ll val)				// 값을 update한 경우 (make_sgt와 거의 유사한 구조 가짐)
 {
-	if (idx < start || idx > end) return sgt[node];									// 바꾸려는 idx가 범위 바깥에 있는 경우 변환 없이 본래 값 return
-	if (start == end) return sgt[node] = val;										// 바꾸려는 idx가 한 점으로 귀결될 경우, 노드의 값을 바꾸려던 값으로 return
+	if (idx < start || idx > end) return sgt[node];					// 바꾸려는 idx가 범위 바깥에 있는 경우 변환 없이 본래 값 return
+	if (start == end) return sgt[node] = val;					// 바꾸려는 idx가 한 점으로 귀결될 경우, 노드의 값을 바꾸려던 값으로 return
 
 	int mid = (start + end) / 2;
 	ll left_res = update_sgt(node * 2, start, mid, idx, val);
@@ -61,10 +61,10 @@ int main()
 	{
 		cin >> arr[i];
 	}
-	int height = (int)ceil(log2(n));												// Complete Binary Tree의 형태를 지니므로 높이는 log2n을 올림처리 한 값이 된다
-	int tsize = (1 << (height + 1));												// 트리의 사이즈는 2의 (height + 1)승이므로, 간단히 1 << (height + 1)로 표현 가능
+	int height = (int)ceil(log2(n));						// Complete Binary Tree의 형태를 지니므로 높이는 log2n을 올림처리 한 값이 된다
+	int tsize = (1 << (height + 1));						// 트리의 사이즈는 2의 (height + 1)승이므로, 간단히 1 << (height + 1)로 표현 가능
 	int total = m + k;
-	sgt.resize(tsize);																// 세그먼트 트리의 사이즈를 구한 tsize로 초기화
+	sgt.resize(tsize);								// 세그먼트 트리의 사이즈를 구한 tsize로 초기화
 	make_sgt(1, 1, n);
 	while (total--)
 	{
