@@ -46,7 +46,7 @@ int main()
 				return 0;
 			}
 		}
-		maxi = table[maxi - 1];                         /* 찾지 못하는 경우이면서, 길이가 줄어도 접미사가 되는 경우를 탐새하도록 반환.
+		maxi = table[maxi - 1];                         /* 찾지 못하는 경우이면서, 길이가 줄어도 접미사가 되는 경우를 탐하도록 반환.
                                                         	   ex) aabbaa의 maximum str은 "aa". 이때 maxi = table[maxi - 1]을 해줌으로써 maximum str은 "a"가 된다. */  
 	}
 	cout << -1;                                             // 찾을 수 없는 경우 -1을 출력
