@@ -26,8 +26,8 @@ ll make_sgt(int node, int start, int end)						// 세그먼트 트리 생성 함
 ll mul_sgt(int node, int start, int end, int left, int right)				// left부터 right까지의 노드의 곱을 return하는 함수
 {
 	if (left > end || right < start) return 1;					// 범위 내에 없는 경우 1을 return (곱의 항등원을 return)
-	if (left <= start && end <= right) return sgt[node];				// left와 right 안에 start와 end가 모두 있는 경우
-																					   → 현재 가리키는 노드가 구하려는 노드의 곱들을 나타내는 노드인 경우 노드값을 return */
+	if (left <= start && end <= right) return sgt[node];				/* left와 right 안에 start와 end가 모두 있는 경우
+											   → 현재 가리키는 노드가 구하려는 노드의 곱들을 나타내는 노드인 경우 노드값을 return */
 
 	int mid = (start + end) / 2;
 	ll left_res = mul_sgt(node * 2, start, mid, left, right);
