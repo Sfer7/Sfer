@@ -1,0 +1,38 @@
+// https://www.acmicpc.net/problem/1912
+
+// Dynamic Programming을 이용한 연속 합 구하기
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+int dp[100001];
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+
+	int n;
+	cin >> n;
+	vector <int> v(n + 1);
+	for (int i = 1; i <= n; i++)
+	{
+		cin >> v[i];
+	}
+	dp[1] = v[1];							// 첫 번째 누적 합은 하나 합이므로 dp[1] = v[1]로 해줌
+	for (int i = 2; i <= n; i++)
+	{
+		if (dp[i - 1] + v[i] >= v[i])				/* (현재 값까지 누적해온 합)과 (현재 값)을 비교.
+									   (누적 값)이 더 크면 그대로, (현재 값)이 더 크면 (현재 값)부터 누적 시작 */
+		{
+			dp[i] = dp[i - 1] + v[i];
+		}
+		else
+		{
+			dp[i] = v[i];
+		}
+	}
+	sort(dp + 1, dp + n + 1);					// dp 배열을 1부터 사용하였으므로, 1번부터 n번까지 정렬해줌
+	cout << dp[n];
+}
