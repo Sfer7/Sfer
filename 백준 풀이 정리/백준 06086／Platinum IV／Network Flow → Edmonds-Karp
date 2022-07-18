@@ -1,0 +1,90 @@
+// https://www.acmicpc.net/problem/6086
+
+// Edmonds-Karp Algorithm을 이용한 풀이
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <cmath>
+
+using namespace std;
+#define INF 2e9
+
+vector <vector <int>> v(52);
+int cap[52][52];
+int flow[52][52];
+int visit[52];
+int ans = 0;
+
+void edk(int s, int e)
+{
+	while (1)
+	{
+		fill_n(visit, 52, -1);								// 탐색 전 방문 정보를 초기화
+		queue <int> q;
+		q.push(s);
+		while (!q.empty())
+		{
+			int x = q.front();
+			q.pop();
+			if (x == e) break;							// end vertex인 경우 break
+			for (int i = 0; i < v[x].size(); i++)
+			{
+				int j = v[x][i];
+				if (cap[x][j] - flow[x][j] > 0 && visit[j] == -1)		// 방문하지 않았고, 유량이 지나갈 수 있으면 queue에 삽입
+				{
+					q.push(j);
+					visit[j] = x;						// 이후에 역순 탐색으로 flow값을 구하기 위해 이전 정점을 저장
+					if (j == e) break;					// end vertex인 경우 break
+				}
+			}
+		}
+		if (visit[e] == -1) break;
+		int f = INF;									// min 비교를 위해 flow값을 INF로 지정
+		for (int i = e; i != s; i = visit[i])
+		{
+			f = min(f, cap[visit[i]][i] - flow[visit[i]][i]);			// 지나갈 수 있는 최대 유량 탐색
+		}
+		for (int i = e; i != s; i = visit[i])
+		{
+			flow[visit[i]][i] += f;							// 간선 간 유량 값 저장
+			flow[i][visit[i]] -= f;
+		}
+		ans += f;									// 최대 유량 값에 현재 지나는 유량 값 더하기
+	}
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+	
+	fill_n(cap[0], 2704, 0);
+	fill_n(flow[0], 2704, 0);
+	int n, c;
+	int x, y;
+	char a, b;
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> a >> b >> c;
+		if (a - 'A' < 26) x = a - 'A';
+		else
+		{
+			x = a - 'a';
+			x += 26;
+		}
+		if (b - 'A' < 26) y = b - 'A';
+		else
+		{
+			y = b - 'a';
+			y += 26;
+		}
+		v[x].push_back(y);
+		v[y].push_back(x);
+		cap[x][y] += c;
+		cap[y][x] += c;									// 양방향 파이프이므로 
+	}
+	edk(0, 25);
+	cout << ans;
+}
